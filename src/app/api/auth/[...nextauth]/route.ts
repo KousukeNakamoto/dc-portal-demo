@@ -16,9 +16,20 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       if (account?.provider === 'google') {
-        const dbUser = await prisma.user.findUnique({
+        const dbUser = await prisma.admin.findUnique({
           where: { email: user.email! },
         })
+        if (!!dbUser) {
+          const dcUser = await prisma.user.findFirst({
+            where: { email: user.email },
+          })
+          if (dcUser?.role === 'USER') {
+            await prisma.user.update({
+              where: { email: user.email! },
+              data: { role: 'ADMIN' },
+            })
+          }
+        }
         return !!dbUser
       }
       return true

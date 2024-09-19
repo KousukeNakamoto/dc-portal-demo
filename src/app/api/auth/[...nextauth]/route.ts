@@ -1,11 +1,12 @@
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
+import { User } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -30,11 +31,37 @@ const handler = NextAuth({
             })
           }
         }
-        return !!dbUser
+        return true
       }
       return true
     },
+    async session({ token, session }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub
+      }
+      if (token.role && session.user) {
+        session.user.role = token.role
+      }
+      return session
+    },
+    async jwt({ token }) {
+      if (!token.sub) return token
+      const existingUser = await prisma.user.findFirst({
+        where: { id: token.sub },
+      })
+      if (!existingUser) return token
+      token.role = existingUser.role
+      return token
+    },
   },
-})
+  pages: {
+    signIn: '/login',
+  },
+  session: {
+    strategy: 'jwt',
+  },
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Noto_Sans_JP } from 'next/font/google'
 import NextAuthProvider from './_provider/NextAuth'
 
-const inter = Inter({ subsets: ['latin'] })
+const noto_sans_jp = Noto_Sans_JP({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'xxxxxxx',
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="ja">
+      <body className={noto_sans_jp.className}>
         <NextAuthProvider>{children}</NextAuthProvider>
       </body>
     </html>

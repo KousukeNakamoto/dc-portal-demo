@@ -1,6 +1,5 @@
 'use client'
-import { signOut, useSession } from 'next-auth/react'
-import { LoginButton } from '../_components/LoginButton'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 export default function Login() {
   const { data: session, status } = useSession()
@@ -17,10 +16,10 @@ export default function Login() {
               alt=""
               style={{ borderRadius: '50px' }}
             />
-            <LoginButton />
+            <button onClick={() => signOut()}>Sign out</button>
           </div>
         ) : (
-          <LoginButton />
+          <button onClick={() => signIn('google')}>Sign in with Google</button>
         )}
       </div>
     </main>

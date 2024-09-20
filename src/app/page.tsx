@@ -1,34 +1,35 @@
 'use client'
 
-import { signIn, useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+
+const routes = [
+  {
+    id: 1,
+    url: 'skillsheet',
+    name: 'SkillSheet',
+  },
+]
 
 export default function LoginPage() {
   const { data: session, status } = useSession()
-  const router = useRouter()
 
-  // useEffect(() => {
-  //   if (status === 'authenticated') {
-  //     router.push('/home')
-  //   }
-  // }, [status, router])
-
-  if (status === 'loading') {
-    return <div>Loading...</div>
-  }
-
+  if (status === 'loading') return 'loading'
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-6 bg-white rounded shadow-md">
-        <h1 className="mb-4 text-2xl font-bold">Login</h1>
-        <button
-          onClick={() => signIn('google', { callbackUrl: '/home' })}
-          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-          Sign in with Google
-        </button>
-      </div>
+    <div className="container mx-auto">
+      <h1>home</h1>
+      {session?.user.role === 'ADMIN' && (
+        <div>
+          <Link href={'/admin'}>admin</Link>
+        </div>
+      )}
+      <ul>
+        {routes.map((route) => (
+          <Link key={route.id} href={route.url}>
+            {route.name}
+          </Link>
+        ))}
+      </ul>
     </div>
   )
 }

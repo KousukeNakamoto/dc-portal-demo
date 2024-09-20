@@ -6,7 +6,7 @@ import NextAuthProvider from './_provider/NextAuth'
 const noto_sans_jp = Noto_Sans_JP({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'xxxxxxx',
+  title: 'dc',
   description: 'xxxxxxx',
 }
 
